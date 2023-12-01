@@ -1,2 +1,2 @@
-# AdventOfCode2023
-My Solutions for Advent of Code 2023 
+This is my first competitive programming contest.
+Feel free to suggest a better method or an alternate solution.
