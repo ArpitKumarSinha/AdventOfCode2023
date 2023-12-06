@@ -11,25 +11,12 @@ locn=[]
 
 #retrieving the list of seeds
 line1=lines[0]
-for i in range(1,len(line1)):
-  if(line1[i].isdigit() and not line1[i-1].isdigit()):
-    n=""
-    while(line1[i].isdigit()):
-      n=n+line1[i]
-      i=i+1
-    num=int(n)
-    lst.append(num)
-start=[]
-raange=[]
-for i in range(0,len(lst)):
-  if(i%2==0):
-    start.append(lst[i])
-  else:
-    raange.append(lst[i])
+lst=line1.split()
+lst.pop(0)
 seeds=[]
-for i in range(0,len(start)):
-  for j in range(start[i],start[i]+raange[i]):
-    seeds.append(j)
+for i in range(0,len(lst),2):
+  t=(int(lst[i]),int(lst[i])+int(lst[i+1]))
+  seeds.append(t)
 
 #retrieving the lists of maps
 def make(what):
@@ -57,16 +44,56 @@ for ln in range(0,len(lines)):
 
 #working on each map
 def map(map,first,second):
-  for i in range(0,len(first)):
-    second.append(first[i])
-  for j in map:
-    part=j.split()
-    dest=int(part[0])
-    src=int(part[1])
-    rnge=int(part[2])
-    for y in range(0,len(first)):
-      if(src<=first[y] and first[y]<src+rnge):
-        second[y]=dest+first[y]-src
+  for x in range(0,len(first)):
+    checktup=first[x]
+    which=0
+    for y in map:
+      part=y.split()
+      dest=int(part[0])
+      src=int(part[1])
+      rnge=int(part[2])
+      if(checktup[0]<=src+rnge-1 and checktup[0]>=src):
+        which=1
+        if(checktup[1]>src+rnge):
+          which=2
+          rettupa=(dest+checktup[0]-src,dest+rnge)
+          rettupb=(src+rnge,checktup[1])
+          break
+        else:
+          which=3
+          rettup=(dest+checktup[0]-src,dest+checktup[1]-src)
+          break
+      if(checktup[1]+1>src and checktup[1]<=src+rnge):
+        which=4
+        if(checktup[0]<src):
+          which=5
+          rettupc=(dest,dest+checktup[1]-src)
+          rettupd=(checktup[0],src)
+          break
+      if(checktup[0]<src and checktup[1]>src+rnge):
+        which=6
+        rettup1=(dest,dest+rnge)
+        rettup2=(checktup[0],src)
+        rettup3=(src+rnge,checktup[1])
+        break  
+    if(which==3 and rettup not in second):
+      second.append(rettup)
+    if(which==0 and checktup not in  second):
+      second.append(checktup)
+    if(which==6 and rettup1 not in second):
+      second.append(rettup1)
+    if(which==6 and rettup2 not in second):
+      second.append(rettup2)
+    if(which==6 and rettup3 not in second):
+      second.append(rettup3)
+    if(which==2 and rettupa not in second):
+      second.append(rettupa)
+    if(which==2 and rettupb not in second):
+      second.append(rettupb)
+    if(which==5 and rettupc not in second):
+      second.append(rettupc)
+    if(which==5 and rettupd not in second):
+      second.append(rettupd)
 
 map(sts,seeds,soil)
 map(stf,soil,fert)
@@ -75,4 +102,4 @@ map(wtl,water,light)
 map(ltt,light,tempr)
 map(tth,tempr,humid)
 map(htl,humid,locn)
-print(min(locn))
+print(min(min(locn)))
