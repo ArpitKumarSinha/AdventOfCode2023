@@ -1,0 +1,43 @@
+f1=open("AOC11.txt",'r')
+lines=f1.readlines()
+
+galaxies=[]
+for i in range(0,len(lines)):
+  line=lines[i]
+  for j in range(0,len(line)):
+    if(line[j]=='#'):
+      pos=(i,j)
+      galaxies.append(pos)      
+
+ver=[]
+for i in range(0,len(lines)):
+  line=lines[i]
+  if(line.count('.')==len(line)-1):
+    ver.append(i)
+
+hor=[]
+for j in range(0,len(line)-1):
+  c=[]
+  for i in range(0,len(lines)):
+    if(lines[i][j]=='.'):
+      c.append((i,j))
+  if(len(c)==len(lines)):
+    hor.append(j)
+
+sum=0
+for g in galaxies:
+  for h in galaxies:
+    dis=0
+    dis=abs(g[0]-h[0])+abs(g[1]-h[1])
+    for v in ver:
+      if(g[0]<v and h[0]>v):
+        dis=dis+999999
+      elif(h[0]<v and g[0]>v):
+        dis=dis+999999
+    for hi in hor:
+      if(g[1]<hi and h[1]>hi):
+        dis=dis+999999
+      elif(h[1]<hi and g[1]>hi):
+        dis=dis+999999     
+    sum+=dis
+print(sum/2)
